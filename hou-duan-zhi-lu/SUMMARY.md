@@ -23,3 +23,5 @@
 * [微服务](fen-bu-shi-kuang-jia/wei-fu-wu.md)
 * [trpc-go框架](fen-bu-shi-kuang-jia/trpcgo-kuang-jia/README.md)
   * [概览](fen-bu-shi-kuang-jia/trpcgo-kuang-jia/gai-lan.md)
+  * [术语](fen-bu-shi-kuang-jia/trpcgo-kuang-jia/shu-yu.md)
+  * [trpc协议设计](fen-bu-shi-kuang-jia/trpcgo-kuang-jia/trpc-xie-yi-she-ji.md)
