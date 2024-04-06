@@ -10,18 +10,18 @@ protobuf是语言无关、平台无关、可拓展的序列化结构数据的机
 
 ### 二.语法
 
-下面是一个简单的proto文件：
+下面是一个简单的proto文件：// 不写默认是proto2
 
-<pre class="language-protobuf"><code class="lang-protobuf"><strong>package foo.bar; // 可选的包说明符，防止消息命名冲突
-</strong><strong>syntax = "proto3"; // 不写默认是proto2
-</strong>
+```protobuf
+package foo.bar // 可选的包说明符，防止消息名冲突
+syntax = "proto3"; // 不写默认是proto2
 // 使用message定义一个结构
 message SearchRequest {
   string query = 1;
   int32 page_number = 2;
   int32 results_per_page = 3;
 }
-</code></pre>
+```
 
 这里需要注意，每一个具体的字段都有如下的属性：
 
