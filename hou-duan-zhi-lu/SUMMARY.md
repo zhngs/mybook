@@ -25,3 +25,5 @@
   * [概览](fen-bu-shi-kuang-jia/trpcgo-kuang-jia/gai-lan.md)
   * [术语](fen-bu-shi-kuang-jia/trpcgo-kuang-jia/shu-yu.md)
   * [trpc协议设计](fen-bu-shi-kuang-jia/trpcgo-kuang-jia/trpc-xie-yi-she-ji.md)
+  * [快速开始](fen-bu-shi-kuang-jia/trpcgo-kuang-jia/kuai-su-kai-shi.md)
+  * [日志](fen-bu-shi-kuang-jia/trpcgo-kuang-jia/ri-zhi.md)
