@@ -1,37 +1,14 @@
 # 日志
 
-### 一.demo演示
+### 一.简介
 
-执行如下命令：
+相关demo见：trpc-go/examples/features/log。
 
-```sh
-cd trpc-go/examples/features/log
+trpc-go自带日志支持，日志在分布式系统中的重要性是不言而喻的，如果没有日志，就没办法准确定位到问题。
 
-# 服务端
-go run server/main.go -conf server/trpc_go.yaml
+trpc-go中日志是作为插件出现的，内部使用了zap库，支持控制台打印和文件打印，同样也支持上传到远端的日志存储系统，如腾讯云的cls。
 
-# 客户端
-go run client/main.go
-```
-
-服务端结果如下所示：
-
-```log
-2024-04-06 13:48:37.338 WARN    server/main.go:41       recv msg:msg:"Hello"
-2024-04-06 13:48:37.338 ERROR   server/main.go:42       recv msg:msg:"Hello"
-```
-
-客户端结果如下所示：
-
-```log
-2024/04/06 13:48:37 Received response: trpc-go-server response: Hello
-```
-
-### 二.原理
-
-代码里包含了`"trpc.group/trpc-go/trpc-go/log"`依赖，引入了日志模块。
-
-查看trpc\_go.yaml如下：
+如下是一个简单的配置文件：
 
 ```yaml
 global:                             # global config.
@@ -66,4 +43,3 @@ plugins:                                           # plugin configuration.
           compress: false                          # determine whether to compress log files.
 ```
 
-可以看到plugins里有日志相关的配置，trpc-go的日志使用了[uber-go/zap](https://github.com/uber-go/zap)。
