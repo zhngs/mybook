@@ -10,7 +10,7 @@ protobuf是语言无关、平台无关、可拓展的序列化结构数据的机
 
 ### 二.语法
 
-下面是一个简单的proto文件：// 不写默认是proto2
+下面是一个简单的proto文件：
 
 ```protobuf
 package foo.bar // 可选的包说明符，防止消息名冲突
@@ -25,8 +25,6 @@ message SearchRequest {
 
 这里需要注意，每一个具体的字段都有如下的属性：
 
-* 可选性：使用optional关键字指定。
-* 重复性：使用repeated关键字指定，默认不是重复的。
 * 字段类型：包括标量类型、枚举类型、复合类型。
 * 字段号：每一个字段都会被打上一个固定的字段号，message里的字段号不能重复，且范围是`1` 到 `536,870,911`，一旦字段号定义了，就不允许再更改，不然会出现兼容性问题。`19,000` 到 `19,999`是预分配给协议内部实现用的，自己用编译器会报错。
 
@@ -183,11 +181,6 @@ service SearchService {
 ### 八.json映射
 
 protobuf和json的映射见：[https://protobuf.dev/programming-guides/proto3/#json](https://protobuf.dev/programming-guides/proto3/#json)
-
-有几点需要注意：
-
-* json转protobuf时，如果字段为空，则解释为默认值。
-* protobuf转json时，如果字段为默认值，则默认不会输出该字段到json中。
 
 ### 九.option
 
