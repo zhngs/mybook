@@ -6,11 +6,24 @@
 
 ### 二.格式
 
-protobuf的编码是一系列的key-value对，key是field number，value包含wire type和payload。wire type可以告诉解码器payload有多大，从而将不同的key-value对分开。
+protobuf的编码是一系列的tag-value对，tag是field number和wire type，value是payload。wire type可以告诉解码器payload有多大，从而将不同的key-value对分开。
 
 下表是不同wire type对应的ID和适用于编码哪些数据类型：
 
 <table><thead><tr><th width="148">ID</th><th width="188">Wire Type</th><th>Used For</th></tr></thead><tbody><tr><td>0</td><td>VARINT</td><td>int32, int64, uint32, uint64, sint32, sint64, bool, enum</td></tr><tr><td>1</td><td>I64</td><td>fixed64, sfixed64, double</td></tr><tr><td>2</td><td>LEN</td><td>string, bytes, embedded messages, packed repeated fields</td></tr><tr><td>3</td><td>SGROUP</td><td>group start (deprecated)</td></tr><tr><td>4</td><td>EGROUP</td><td>group end (deprecated)</td></tr><tr><td>5</td><td>I32</td><td>fixed32, sfixed32, float</td></tr></tbody></table>
+
+#### 1.tag解析
+
+tag的解析是通过Base 128 Varints算法来解析，Base 128 Varints算法核心是如果字节最高位是1，说明下一个字节仍然需要解析，如果是0，说明这个字节就是tag的结束。
+
+通过Base 128 Varints拿到的数字，低3位代表wire\_type，其他位代表field number。
+
+```
+0 0001 000
+根据Base 128 Varints最高位的0首先可以判断本次tag是一个字节
+然后找到最低的3位，值为0表示wire type是VARINT
+然后剩下的部分是field number，一字节的field number最大值是15，这也是为什么最常用的字段最好field number小于15
+```
 
 ### 三.参考表
 
