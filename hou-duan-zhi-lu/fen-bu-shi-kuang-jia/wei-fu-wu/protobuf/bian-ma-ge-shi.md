@@ -1,4 +1,4 @@
-# 编码
+# 编码格式
 
 ### 一.简介
 
@@ -25,9 +25,85 @@ tag的解析是通过Base 128 Varints算法来解析，Base 128 Varints算法核
 然后剩下的部分是field number，一字节的field number最大值是15，这也是为什么最常用的字段最好field number小于15
 ```
 
+#### 2.value解析
+
+VARINT的value是变长的数字，I64固定是8字节，I32固定是4字节。
+
+LEN类型的value包含两个值，第一个值是标识长度的变长数字，第二个值是真正的payload。
+
+```protobuf
+message Test2 {
+  optional string b = 2;
+}
+
+// 将b赋值为"testing" 如下是编码情况
+12 07 [74 65 73 74 69 6e 67]
+12 = 00010 010 意思是wire type是LEN，field number是2
+07 表示长度是7
+```
+
+#### 3.message编码
+
+```protobuf
+message Test1 {
+  optional int32 a = 1;
+}
+
+message Test3 {
+  optional Test1 c = 3;
+}
+
+// 假设c.a的值是150
+1a 03 [08 96 01]
+1a = 00011 010 表示field number是3，wire type是2
+03 表示负载的长度是3
+08 = 00001 000 表示field number是1，wire type是0
+96 01 是真正的负载，使用Base 128 Varints表示，为150
+```
+
+#### 4.repeated编码
+
+```protobuf
+message Test4 {
+  optional string d = 4;
+  repeated int32 e = 5;
+}
+
+// 假设d是"hello"，e是[1,2,3]，以下是编码情况，冒号前表示field number，冒号后是payload
+4: {"hello"}
+5: 1
+5: 2
+5: 3
+
+// 可以发现repeated的编码实际就是相同的field number的多个tag-value对
+// 不同field之间没必要保证顺序，只需同一field保证顺序，如下也是正确的编码
+5: 1
+5: 2
+4: {"hello"}
+5: 3
+```
+
+#### 5.map编码
+
+map实际上是repeated字段的一种简写，如下两个Test6的效果是相同的。
+
+```protobuf
+message Test6 {
+  map<string, int32> g = 7;
+}
+
+message Test6 {
+  message g_Entry {
+    optional string key = 1;
+    optional int32 value = 2;
+  }
+  repeated g_Entry g = 7;
+}
+```
+
 ### 三.参考表
 
-下面是protobuf编码的一个简易参考表：
+下面是protobuf编码的一个简易顺序表，从前往后读较为清晰：
 
 ```gdscript3
 message    := (tag value)*
