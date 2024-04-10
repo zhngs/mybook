@@ -23,6 +23,7 @@
 * [微服务](fen-bu-shi-kuang-jia/wei-fu-wu/README.md)
   * [protobuf](fen-bu-shi-kuang-jia/wei-fu-wu/protobuf/README.md)
     * [proto3](fen-bu-shi-kuang-jia/wei-fu-wu/protobuf/proto3.md)
+    * [proto2](fen-bu-shi-kuang-jia/wei-fu-wu/protobuf/proto2.md)
     * [风格指南](fen-bu-shi-kuang-jia/wei-fu-wu/protobuf/feng-ge-zhi-nan.md)
     * [编码格式](fen-bu-shi-kuang-jia/wei-fu-wu/protobuf/bian-ma-ge-shi.md)
     * [拓展声明](fen-bu-shi-kuang-jia/wei-fu-wu/protobuf/tuo-zhan-sheng-ming.md)

@@ -14,9 +14,9 @@ protobuf的编码是一系列的tag-value对，tag是field number和wire type，
 
 #### 1.tag解析
 
-tag的解析是通过Base 128 Varints算法来解析，Base 128 Varints算法核心是如果字节最高位是1，说明下一个字节仍然需要解析，如果是0，说明这个字节就是tag的结束。
+tag的解析是通过Base 128 Varints算法来解析，Base 128 Varints算法核心是如果字节最高位是1，说明下一个字节仍然需要解析，如果是0，说明这个字节就是tag的结束。128是2^7，正好是8位，核心就是使用每个字节的最高位来表示该字节是否仍然处于变长数字中。
 
-通过Base 128 Varints拿到的数字，低3位代表wire\_type，其他位代表field number。
+通过Base 128 Varints拿到的数字，低3位代表wire\_type，其他位代表field number。这里也能解释为什么field number最大值是2^29-1，因为tag本身是32位的，去掉最低的3位，正好是29位。
 
 ```
 0 0001 000
