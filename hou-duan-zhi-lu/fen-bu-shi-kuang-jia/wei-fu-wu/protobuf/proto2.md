@@ -19,8 +19,6 @@ proto2的字段前必有一个label，proto3可以不存在label。
 
 拓展可以定义message中的field，但是不必和message在同一个文件，主要作用是减少依赖。
 
-#### 1.拓展例子
-
 如下是在kittens/video\_ext.proto文件中定义的一个拓展：
 
 ```protobuf
@@ -65,6 +63,7 @@ message UserContent {
 * 拓展字段在序列化的时候和正常字段没区别，将拓展字段移动到message中或者从message里抽出字段到拓展是兼容的。
 * 拓展字段和标准字段生成的api有区别，拓展字段需要用特殊的api来读取。
 * 拓展字段不能是oneof或者map。
+* 这样的用法只有proto2中可以使用，proto3的拓展只能用于自定义option。
 
 下面是c++中操作拓展字段的例子：
 
@@ -78,6 +77,8 @@ user_content.GetExtension(kittens::kitten_videos, 0);
 ### 四.option
 
 #### 1.自定义option
+
+自定义option在proto2和proto3中都支持。
 
 下面定义了一个message级别的option，方法是拓展MessageOptions：
 
