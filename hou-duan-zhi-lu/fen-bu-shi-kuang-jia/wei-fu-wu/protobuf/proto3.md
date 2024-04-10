@@ -99,7 +99,7 @@ message Result {
 
 #### 5.oneof类型
 
-oneof类型类似c++中的union，主要是为了节省内存。其中最多只能有一个字段被设置，后面设置的字段会覆盖前面设置的字段。
+oneof类型类似c++中的union，主要是为了节省内存。其中最多只能有一个字段被设置，后面设置的字段会覆盖前面设置的字段。oneof中的字段不能是map和repeated类型。
 
 ```protobuf
 message SampleMessage {

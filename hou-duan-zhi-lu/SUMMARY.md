@@ -26,7 +26,7 @@
     * [proto2](fen-bu-shi-kuang-jia/wei-fu-wu/protobuf/proto2.md)
     * [风格指南](fen-bu-shi-kuang-jia/wei-fu-wu/protobuf/feng-ge-zhi-nan.md)
     * [编码格式](fen-bu-shi-kuang-jia/wei-fu-wu/protobuf/bian-ma-ge-shi.md)
-    * [拓展声明](fen-bu-shi-kuang-jia/wei-fu-wu/protobuf/tuo-zhan-sheng-ming.md)
+    * [拓展](fen-bu-shi-kuang-jia/wei-fu-wu/protobuf/tuo-zhan.md)
     * [字段存在性](fen-bu-shi-kuang-jia/wei-fu-wu/protobuf/zi-duan-cun-zai-xing.md)
     * [最佳实践](fen-bu-shi-kuang-jia/wei-fu-wu/protobuf/zui-jia-shi-jian.md)
 * [trpc-go框架](fen-bu-shi-kuang-jia/trpcgo-kuang-jia/README.md)
