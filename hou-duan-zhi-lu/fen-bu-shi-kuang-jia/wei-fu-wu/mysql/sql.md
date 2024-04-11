@@ -208,7 +208,7 @@ LIMIT 分页参数
 
 执行顺序如下：
 
-* from --> where --> group by --> having --> select --> order by --> limit
+* from --> where --> group by --> 聚合函数 --> having --> select --> order by --> limit
 
 #### 1.基础查询
 
