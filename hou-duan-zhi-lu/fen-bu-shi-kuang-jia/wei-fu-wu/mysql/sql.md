@@ -321,3 +321,166 @@ SELECT 字段列表 FROM 表名 LIMIT 起始索引, 查询记录数;
 
 ### 七.DCL
 
+#### 1.用户操作
+
+* 查询用户
+
+```sql
+select * from mysql.user;
+```
+
+* 创建用户
+
+```sql
+CREATE USER '用户名'@'主机名' IDENTIFIED BY '密码';
+```
+
+* 修改用户密码
+
+```sql
+ALTER USER '用户名'@'主机名' IDENTIFIED WITH mysql_native_password BY '新密码';
+```
+
+* 删除用户
+
+```sql
+DROP USER '用户名'@'主机名';
+```
+
+#### 2.权限操作
+
+* 查询权限
+
+```sql
+SHOW GRANTS FOR '用户名'@'主机名' ;
+```
+
+* 授予权限
+
+```sql
+GRANT 权限列表 ON 数据库名.表名 TO '用户名'@'主机名';
+```
+
+* 撤销权限
+
+```sql
+REVOKE 权限列表 ON 数据库名.表名 FROM '用户名'@'主机名';
+```
+
+### 八.函数
+
+#### 1.字符串函数
+
+* CONCAT(S1,S2,...Sn) ：字符串拼接，将S1，S2，... Sn拼接成一个字符串。
+* LOWER(str) ：将字符串str全部转为小写。
+* UPPER(str) ：将字符串str全部转为大写。
+* LPAD(str,n,pad) ：左填充，用字符串pad对str的左边进行填充，达到n个字符串长度。
+* RPAD(str,n,pad) ：右填充，用字符串pad对str的右边进行填充，达到n个字符串长度。
+* TRIM(str) ：去掉字符串头部和尾部的空格。
+* SUBSTRING(str,start,len) ：返回从字符串str从start位置起的len个长度的字符串。
+
+#### 2.数值函数
+
+* CEIL(x) ：向上取整。
+* FLOOR(x) ：向下取整。
+* MOD(x,y) ：返回x/y的模。
+* RAND() ：返回0\~1内的随机数。
+* ROUND(x,y) ：求参数x的四舍五入的值，保留y位小数。
+
+#### 3.日期函数
+
+* CURDATE() ：返回当前日期。
+* CURTIME() ：返回当前时间。
+* NOW() ：返回当前日期和时间。
+* YEAR(date) ：获取指定date的年份。
+* MONTH(date) ：获取指定date的月份。
+* DAY(date) ：获取指定date的日期。
+* DATE\_ADD(date, INTERVAL exprtype) ：返回一个日期/时间值加上一个时间间隔expr后的时间。
+* DATEDIFF(date1,date2) ：返回起始时间date1 和 结束时间date2之间的天数。
+
+#### 3.流程函数
+
+* `IF(value , t , f)` ：如果value为true，则返回t，否则返回f。
+* `IFNULL(value1 , value2)` ：如果value1不为空，返回value1，否则返回value2。
+* `CASE WHEN [ val1 ] THEN [res1] ... ELSE [ default ] END` ：如果val1为true，返回res1，... 否则返回default默认。
+* `CASE [ expr ] WHEN [ val1 ] THEN [res1] ... ELSE [ default ] END` ：如果expr的值等于val1，返回 res1，...，否则返回default默认值。
+
+### 九.约束
+
+约束是对某些字段进行限制，来增强对数据的控制，约束有如下种类：
+
+* not null：非空约束，限制该字段的数据不能为null。
+* unique：唯一约束，保证该字段的所有数据都是唯一、不重复的。
+* primary key：主键约束，主键是一行数据的唯一标识，要求非空且唯一。
+* default：默认约束，保存数据时，如果未指定该字段的值，则采用默认值。
+* check：检查约束(8.0.16版本之后) ，保证字段值满足某一个条件。
+* foreign key：外键约束，用来让两张表的数据之间建立连接，保证数据的一致性和完整性。外键不推荐使用。
+
+### 十.多表查询
+
+多表查询是将多张表使用笛卡尔积的形式组合在一起，然后进行查询。
+
+笛卡尔积: 笛卡尔乘积是指在数学中，两个集合A集合 和 B集合的所有组合情况。
+
+#### 1.分类
+
+多表查询分类如下：
+
+* 内连接查询
+* 外连接查询（分为左连接和右连接，两者可以相互转化）
+* 自连接查询
+
+#### 2.内连接
+
+内连接是只取两个表的交集。
+
+* 隐式内连接
+
+```sql
+SELECT 字段列表 FROM 表1 , 表2 WHERE 条件 ...;
+```
+
+* 显式内连接
+
+```sql
+SELECT 字段列表 FROM 表1 [ INNER ] JOIN 表2 ON 连接条件 ...;
+```
+
+#### 3.外连接
+
+外连接不取交集，首先左外连接的话，左表的所有数据都在，右表如果有和左表相交的数据，则填入最终表中，不相交的数据，字段使用默认值。
+
+* 左外连接
+
+```sql
+SELECT 字段列表 FROM 表1 LEFT [ OUTER ] JOIN 表2 ON 条件 ...;
+```
+
+* 右外连接
+
+```sql
+SELECT 字段列表 FROM 表1 RIGHT [ OUTER ] JOIN 表2 ON 条件 ...;
+```
+
+#### 4.自连接
+
+自连接查询可以是内连接，也可以是外连接，只需要将表设置成别名即可当成两张表进行多表查询。
+
+### 十一.嵌套查询
+
+SQL语句中嵌套SELECT语句，称为嵌套查询，又称子查询。
+
+#### 1.分类
+
+根据查询结果不同，分类如下：
+
+* 标量子查询（子查询结果为单个值）
+* 列子查询(子查询结果为一列)
+* 行子查询(子查询结果为一行)
+* 表子查询(子查询结果为多行多列)
+
+根据查询位置，分类如下：
+
+* where之后
+* from之后
+* select之后
