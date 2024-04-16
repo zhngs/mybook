@@ -43,7 +43,7 @@ tRPC插件化在整体设计上遵循如下的思想：
 
 插件工厂的整体实现思路是框架只定义插件的标准接口，并提供注册能力，不做具体实现。与外部服务互通，或者对接某个服务治理系统时，只需要开发对应的具体插件即可
 
-<figure><img src="../../.gitbook/assets/image (1).png" alt=""><figcaption><p>名字服务插件</p></figcaption></figure>
+<figure><img src="../../.gitbook/assets/image (1) (1).png" alt=""><figcaption><p>名字服务插件</p></figcaption></figure>
 
 例如上方，框架对接不同名字服务系统，定义了统一的Registry和Selector抽象接口，对接不同的名字服务系统时只需要按照Registry和Selector接口即可实现即可。
 
@@ -63,7 +63,7 @@ filter的最终目的是让业务逻辑与框架进行解耦，并允许各自�
 
 ### 四.总体架构
 
-<figure><img src="../../.gitbook/assets/image (1) (1).png" alt=""><figcaption><p>总体架构</p></figcaption></figure>
+<figure><img src="../../.gitbook/assets/image (1) (1) (1).png" alt=""><figcaption><p>总体架构</p></figcaption></figure>
 
 总体架构由**框架核心**和**插件**两部分组成。 其中虚线框内为tRPC，中间的红色实线框为框架核心，蓝色框为插件部分。
 

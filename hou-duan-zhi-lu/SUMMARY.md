@@ -34,6 +34,7 @@
     * [事务](fen-bu-shi-kuang-jia/wei-fu-wu/mysql/shi-wu.md)
     * [索引](fen-bu-shi-kuang-jia/wei-fu-wu/mysql/suo-yin.md)
     * [锁](fen-bu-shi-kuang-jia/wei-fu-wu/mysql/suo.md)
+    * [InnoDB](fen-bu-shi-kuang-jia/wei-fu-wu/mysql/innodb.md)
   * [redis](fen-bu-shi-kuang-jia/wei-fu-wu/redis.md)
 * [trpc-go框架](fen-bu-shi-kuang-jia/trpcgo-kuang-jia/README.md)
   * [概览](fen-bu-shi-kuang-jia/trpcgo-kuang-jia/gai-lan.md)
