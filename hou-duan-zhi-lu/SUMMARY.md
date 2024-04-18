@@ -39,6 +39,7 @@
     * [概述](fen-bu-shi-kuang-jia/wei-fu-wu/redis/gai-shu.md)
     * [通用命令](fen-bu-shi-kuang-jia/wei-fu-wu/redis/tong-yong-ming-ling.md)
     * [String](fen-bu-shi-kuang-jia/wei-fu-wu/redis/string.md)
+    * [List](fen-bu-shi-kuang-jia/wei-fu-wu/redis/list.md)
     * [分布式锁](fen-bu-shi-kuang-jia/wei-fu-wu/redis/fen-bu-shi-suo.md)
 * [trpc-go框架](fen-bu-shi-kuang-jia/trpcgo-kuang-jia/README.md)
   * [概览](fen-bu-shi-kuang-jia/trpcgo-kuang-jia/gai-lan.md)

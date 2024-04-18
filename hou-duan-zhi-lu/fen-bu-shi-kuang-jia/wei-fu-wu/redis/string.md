@@ -1,6 +1,8 @@
 # String
 
-#### 1.SET
+String底层是一个简单的动态字符串。
+
+### 1.SET
 
 ```
 SET key value [NX | XX] [GET] [EX seconds | PX milliseconds | EXAT unix-time-seconds | PXAT unix-time-milliseconds | KEEPTTL]
@@ -48,7 +50,7 @@ redis> SET anotherkey "will expire in a minute" EX 60
 "OK"
 ```
 
-#### 2.GET
+### 2.GET
 
 ```
 GET key
@@ -68,7 +70,7 @@ RESP3返回值：
 * 如果key不存在，返回Null。
 * 如果key的类型不是string，返回错误。
 
-#### 3.APPEND
+### 3.APPEND
 
 ```
 APPEND key value
@@ -91,7 +93,7 @@ redis> GET mykey
 "Hello World"
 ```
 
-#### 4.STRLEN
+### 4.STRLEN
 
 ```
 STRLEN key
@@ -114,7 +116,7 @@ redis> STRLEN nonexisting
 (integer) 0
 ```
 
-#### 5.INCR
+### 5.INCR
 
 ```
 INCR key
@@ -130,6 +132,7 @@ INCR key
 注意：
 
 * key上数字的范围是64位有符号数字。在redis中，使用字符串表示整数没有额外开销。
+* INCRBY和INCR类似，但是可以增加指定的数字。
 * INCR可以用来做计数器和限频器。
 
 ```
@@ -141,9 +144,22 @@ redis> GET mykey
 "11"
 ```
 
-#### 6.DECR
+### 6.DECR
+
+```
+DECR key
+```
 
 使key上可以转换成数字的字符串减1。如果key不存在，会首先执行`SET key 0`，再执行DECR。时间复杂度是O(1)。
+
+注意：
+
+* DECRBY和DECR类似，但是可以减少指定的数字。
+
+返回值：
+
+* 返回key上的整数（integer）。
+* 如果key的类型不是string或者key上的值不能转成字符串，返回错误。
 
 ```
 redis> SET mykey "10"
@@ -156,7 +172,51 @@ redis> DECR mykey
 (error) value is not an integer or out of range
 ```
 
+### 7.MSET
+
+```
+MSET key value [key value ...]
+```
+
+同时设置多个key，时间复杂度是O(n)，n是key的数量。
+
 返回值：
 
-* 返回key上的整数（integer）。
-* 如果key的类型不是string或者key上的值不能转成字符串，返回错误。
+* 总是OK（simple string）
+
+注意：
+
+* MSET是原子性的，只要成功所有的值都会一次性被设置上。
+* MSET类似SET，会覆盖现有的key。如果不想覆盖，可以使用MSETNX。
+
+```
+redis> MSET key1 "Hello" key2 "World"
+"OK"
+redis> GET key1
+"Hello"
+redis> GET key2
+"World"
+```
+
+### 8.MGET
+
+```
+MGET key [key ...]
+```
+
+同时获取多个key，如果key不存在会返回Nil。时间复杂度是O(n)，n是key的数量。
+
+返回值：
+
+* 所有值组成的list（array）
+
+```
+redis> SET key1 "Hello"
+"OK"
+redis> SET key2 "World"
+"OK"
+redis> MGET key1 key2 nonexisting
+1) "Hello"
+2) "World"
+3) (nil)
+```

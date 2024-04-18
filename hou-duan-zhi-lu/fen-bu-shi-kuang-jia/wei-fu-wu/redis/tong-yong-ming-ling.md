@@ -1,6 +1,6 @@
 # 通用命令
 
-#### 1.KEYS
+### 1.KEYS
 
 ```
 KEYS pattern
@@ -31,7 +31,7 @@ redis> KEYS *
 3) "firstname"
 ```
 
-#### 2.EXISTS
+### 2.EXISTS
 
 ```
 EXISTS key [key ...]
@@ -60,7 +60,7 @@ redis> EXISTS key1 key2 nosuchkey
 (integer) 2
 ```
 
-#### 3.TYPE
+### 3.TYPE
 
 ```
 TYPE key
@@ -87,7 +87,7 @@ redis> TYPE key3
 "set"
 ```
 
-#### 3.DEL
+### 4.DEL
 
 ```
 DEL key [key ...]
@@ -112,7 +112,7 @@ redis> DEL key1 key2 key3
 (integer) 2
 ```
 
-#### 3.UNLINK
+### 5.UNLINK
 
 ```
 UNLINK key [key ...]
@@ -129,7 +129,7 @@ UNLINK key [key ...]
 * 如果key不存在，会被忽略。
 * UNLINK是非阻塞的，DEL是阻塞的。
 
-#### 4.TTL
+### 6.TTL
 
 ```
 TTL key
@@ -152,7 +152,7 @@ redis> TTL mykey
 (integer) 10
 ```
 
-#### 5.EXPIRE
+### 7.EXPIRE
 
 ```
 EXPIRE key seconds [NX | XX | GT | LT]
