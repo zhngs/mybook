@@ -8,7 +8,7 @@ KEYS pattern
 
 该命令返回redis中所有满足pattern的key，时间复杂度是O(n)，n是redis中所有key。
 
-返回值：
+返回值（array）：
 
 * 所有匹配的key的list。
 
@@ -39,7 +39,9 @@ EXISTS key [key ...]
 
 该命令可用于判断key是否存在，时间复杂度是O(n)，n是EXISTS后key的个数。
 
-返回值是指定的key中存在的key的个数。
+返回值（integer）：
+
+* 指定的key中存在的key的个数。
 
 注意：
 
@@ -66,7 +68,9 @@ TYPE key
 
 该命令用来查询key的类型，时间复杂度是O(1)。
 
-返回值是类型的字符串，如果不存在返回none。
+返回值（string）：
+
+* 类型的字符串，如果不存在返回none。
 
 ```
 redis> SET key1 "value"
@@ -91,7 +95,9 @@ DEL key [key ...]
 
 该命令用来删除key，如果key类型是string，时间复杂度是O(n)，n是要删除的key的个数，如果key类型是list这种复合类型，时间复杂度是O(m)，m是list中值的个数。
 
-返回值是删除成功的key的个数。
+返回值（integer）：
+
+* 删除成功的key的个数。
 
 注意：
 
@@ -114,6 +120,10 @@ UNLINK key [key ...]
 
 该命令用来异步删除key，首先会在keyspace中将该key删除，然后实际的内存回收会在别的线程执行。时间复杂度是O(1)，实际的内存回收线程会有O(n)的时间复杂度，n是key中实际值的个数。
 
+返回值（integer）：
+
+* 删除成功的key的个数。
+
 注意：
 
 * 如果key不存在，会被忽略。
@@ -127,7 +137,7 @@ TTL key
 
 该命令用来获取设置过超时的key的存活时间，时间级别是秒。时间复杂度是O(1)。
 
-返回值：
+返回值（integer）：
 
 * key存在且设置超时，返回秒级的生存时间。
 * 如果key存在但是没有设置超时，返回-1。
@@ -148,7 +158,12 @@ redis> TTL mykey
 EXPIRE key seconds [NX | XX | GT | LT]
 ```
 
-给key设置超时时间，时间复杂度是O(1)。设置过超时的key，被称之为`volatile`。如果成功设置超时，会返回1，如果没有成功设置超时，会返回0（比如key不存在）。
+给key设置超时时间，时间复杂度是O(1)。设置过超时的key，被称之为`volatile`。
+
+返回值：
+
+* 如果成功设置超时，会返回1。
+* 如果没有成功设置超时，会返回0（比如key不存在）。
 
 选项含义如下：
 
