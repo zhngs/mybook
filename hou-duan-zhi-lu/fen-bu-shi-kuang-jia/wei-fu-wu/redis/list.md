@@ -104,3 +104,113 @@ redis> LRANGE mylist -100 100
 redis> LRANGE mylist 5 10
 (empty array)
 ```
+
+### 4.LINDEX
+
+```
+LINDEX key index
+```
+
+返回链表中下标为index的值。时间复杂度是O(n)，n是找到index需要的步数。
+
+RESP2返回值：
+
+* 返回链表中下标为index的值（bulk string）。
+* 如果index超出范围，返回Nil。
+
+RESP3返回值：
+
+* 返回链表中下标为index的值（bulk string）。
+* 如果index超出范围，返回Null。
+
+```
+redis> LPUSH mylist "World"
+(integer) 1
+redis> LPUSH mylist "Hello"
+(integer) 2
+redis> LINDEX mylist 0
+"Hello"
+redis> LINDEX mylist -1
+"World"
+redis> LINDEX mylist 3
+(nil)
+```
+
+### 5.LLEN
+
+```
+LLEN key
+```
+
+返回列表的长度，时间复杂度是O(1)。
+
+返回值：
+
+* 返回列表长度（integer）。
+* 如果key不存在，返回0。
+
+```
+redis> LPUSH mylist "World"
+(integer) 1
+redis> LPUSH mylist "Hello"
+(integer) 2
+redis> LLEN mylist
+(integer) 2
+```
+
+### 6.LINSERT
+
+```
+LINSERT key <BEFORE | AFTER> pivot element
+```
+
+向pivot值的前或后插入element。
+
+返回值：
+
+* 如果成功插入，返回list长度（integer）。
+* 如果key不存在，返回0。
+* 如果pivot没找到，返回-1。
+
+```
+redis> RPUSH mylist "Hello"
+(integer) 1
+redis> RPUSH mylist "World"
+(integer) 2
+redis> LINSERT mylist BEFORE "World" "There"
+(integer) 3
+redis> LRANGE mylist 0 -1
+1) "Hello"
+2) "There"
+3) "World"
+```
+
+### 7.LSET
+
+```
+LSET key index element
+```
+
+将index上的值设置为element。
+
+返回值：
+
+* 成功设置返回OK（simple string）
+* 超出范围返回错误。
+
+```
+redis> RPUSH mylist "one"
+(integer) 1
+redis> RPUSH mylist "two"
+(integer) 2
+redis> RPUSH mylist "three"
+(integer) 3
+redis> LSET mylist 0 "four"
+"OK"
+redis> LSET mylist -2 "five"
+"OK"
+redis> LRANGE mylist 0 -1
+1) "four"
+2) "five"
+3) "three"
+```
