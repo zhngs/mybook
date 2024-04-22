@@ -8,11 +8,11 @@
 SET resource-name anystring NX EX max-lock-time
 ```
 
-如果上述命令返回OK，说明获取了锁。如果返回NIL，则稍后重试。
+如果上述命令返回OK，说明获取了锁。如果返回Nil，则稍后重试。
 
 注意：
 
-* anystring应该使用一个随机的猜测不到的大字符串，称之为token。
+* anystring应该使用一个随机的猜测不到的大字符串，称之为token，可以使用uuid。
 * 不要使用DEL释放锁，而是使用脚本判断anystring相等才释放锁。
 * 以上两点是防止一种情况：A设置了分布式锁lock且超时时间60s，在60s的时候A仍然没有执行完业务逻辑，此时lock超时删除。在61s的时候B重新设置了分布式锁lock，但是A此时业务逻辑执行完成，删除了lock。所以anystring既然随机，删除的时候也要判断这个anystring。
 
