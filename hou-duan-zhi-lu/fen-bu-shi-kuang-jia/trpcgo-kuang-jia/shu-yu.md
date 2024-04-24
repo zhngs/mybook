@@ -24,7 +24,7 @@ tRPC在服务命名上定义了以下3个纬度信息：
 * 对于服务寻址，可以生成全局唯一的服务路由名称，方便服务注册和服务发现。
 * 对于服务运营，可以方便服务的部署、各种维度的监控数据采集、告警等。
 
-<figure><img src="../../.gitbook/assets/image (1).png" alt=""><figcaption><p>rpc调用示意图</p></figcaption></figure>
+<figure><img src="../../.gitbook/assets/image (1) (1).png" alt=""><figcaption><p>rpc调用示意图</p></figcaption></figure>
 
 服务A作为客户端，服务B作为服务端，在tRPC中我们称客户端也为 `主调(caller)`，服务端也为 `被调(callee)`。主调（caller）A通过服务路由的名字（Route ID）向名字服务拿到ip/port列表后，然后在通信协议中设置调用的RPC接口名（Interface ID），访问被调B（callee）。
 

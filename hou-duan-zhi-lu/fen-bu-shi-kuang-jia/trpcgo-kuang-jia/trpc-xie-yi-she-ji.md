@@ -23,7 +23,7 @@
 
 ### 二.协议设计
 
-<figure><img src="../../.gitbook/assets/image (3).png" alt=""><figcaption><p>trpc协议</p></figcaption></figure>
+<figure><img src="../../.gitbook/assets/image (3) (1).png" alt=""><figcaption><p>trpc协议</p></figcaption></figure>
 
 tRPC协议支持一应一答和流式两种传输方式。
 
