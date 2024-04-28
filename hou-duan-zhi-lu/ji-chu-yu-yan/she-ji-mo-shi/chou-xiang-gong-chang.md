@@ -1,28 +1,116 @@
 # 抽象工厂
 
-### 一.图解
+### 一.go代码
 
-<figure><img src="../../.gitbook/assets/image (9).png" alt=""><figcaption><p>类图</p></figcaption></figure>
+{% code lineNumbers="true" %}
+```go
+package abstractfactory
 
-抽象工厂是对工厂方法的拓展，主要用于多种抽象产品创建。比如产品A是手机，产品B是电脑，工厂1是小米，工厂2是华为，这样每有一类新的产品，比如苹果的手机和电脑，只需要新建一个苹果的工厂。
+import "fmt"
 
-```cpp
-int main(int argc, char *argv[]) {
-	AbstractFactory * fc = new ConcreteFactory1();
-	AbstractProductA * pa =  fc->createProductA();
-	AbstractProductB * pb = fc->createProductB();
-	pa->use();
-	pb->eat();
-	
-	AbstractFactory * fc2 = new ConcreteFactory2();
-	AbstractProductA * pa2 =  fc2->createProductA();
-	AbstractProductB * pb2 = fc2->createProductB();
-	pa2->use();
-	pb2->eat();
+// OrderMainDAO 为订单主记录
+type OrderMainDAO interface {
+	SaveOrderMain()
+}
+
+// OrderDetailDAO 为订单详情纪录
+type OrderDetailDAO interface {
+	SaveOrderDetail()
+}
+
+// DAOFactory DAO 抽象模式工厂接口
+type DAOFactory interface {
+	CreateOrderMainDAO() OrderMainDAO
+	CreateOrderDetailDAO() OrderDetailDAO
+}
+
+// RDBMainDAO 关系型数据库的OrderMainDAO实现
+type RDBMainDAO struct{}
+
+// SaveOrderMain ...
+func (*RDBMainDAO) SaveOrderMain() {
+	fmt.Print("rdb main save\n")
+}
+
+// RDBDetailDAO 为关系型数据库的OrderDetailDAO实现
+type RDBDetailDAO struct{}
+
+// SaveOrderDetail ...
+func (*RDBDetailDAO) SaveOrderDetail() {
+	fmt.Print("rdb detail save\n")
+}
+
+// RDBDAOFactory 是RDB 抽象工厂实现
+type RDBDAOFactory struct{}
+
+func (*RDBDAOFactory) CreateOrderMainDAO() OrderMainDAO {
+	return &RDBMainDAO{}
+}
+
+func (*RDBDAOFactory) CreateOrderDetailDAO() OrderDetailDAO {
+	return &RDBDetailDAO{}
+}
+
+// XMLMainDAO XML存储
+type XMLMainDAO struct{}
+
+// SaveOrderMain ...
+func (*XMLMainDAO) SaveOrderMain() {
+	fmt.Print("xml main save\n")
+}
+
+// XMLDetailDAO XML存储
+type XMLDetailDAO struct{}
+
+// SaveOrderDetail ...
+func (*XMLDetailDAO) SaveOrderDetail() {
+	fmt.Print("xml detail save")
+}
+
+// XMLDAOFactory 是XML 抽象工厂实现
+type XMLDAOFactory struct{}
+
+func (*XMLDAOFactory) CreateOrderMainDAO() OrderMainDAO {
+	return &XMLMainDAO{}
+}
+
+func (*XMLDAOFactory) CreateOrderDetailDAO() OrderDetailDAO {
+	return &XMLDetailDAO{}
 }
 ```
+{% endcode %}
 
-<figure><img src="../../.gitbook/assets/image (10).png" alt=""><figcaption><p>时序图</p></figcaption></figure>
+使用方式如下：
+
+{% code lineNumbers="true" %}
+```go
+package abstractfactory
+
+// 这是稳定的代码
+func getMainAndDetail(factory DAOFactory) {
+	factory.CreateOrderMainDAO().SaveOrderMain()
+	factory.CreateOrderDetailDAO().SaveOrderDetail()
+}
+
+func ExampleRdbFactory() {
+	var factory DAOFactory
+	factory = &RDBDAOFactory{}
+	getMainAndDetail(factory)
+	// Output:
+	// rdb main save
+	// rdb detail save
+}
+
+func ExampleXmlFactory() {
+	var factory DAOFactory
+	factory = &XMLDAOFactory{}
+	getMainAndDetail(factory)
+	// Output:
+	// xml main save
+	// xml detail save
+}
+```
+{% endcode %}
 
 ### 二.特性
 

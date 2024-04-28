@@ -14,7 +14,13 @@
   * [抽象工厂](ji-chu-yu-yan/she-ji-mo-shi/chou-xiang-gong-chang.md)
   * [单例模式](ji-chu-yu-yan/she-ji-mo-shi/dan-li-mo-shi.md)
   * [策略模式](ji-chu-yu-yan/she-ji-mo-shi/ce-lve-mo-shi.md)
-  * [观察者](ji-chu-yu-yan/she-ji-mo-shi/guan-cha-zhe.md)
+  * [观察者模式](ji-chu-yu-yan/she-ji-mo-shi/guan-cha-zhe-mo-shi.md)
+  * [外观模式](ji-chu-yu-yan/she-ji-mo-shi/wai-guan-mo-shi.md)
+  * [适配器模式](ji-chu-yu-yan/she-ji-mo-shi/shi-pei-qi-mo-shi.md)
+  * [建造者模式](ji-chu-yu-yan/she-ji-mo-shi/jian-zao-zhe-mo-shi.md)
+  * [原型模式](ji-chu-yu-yan/she-ji-mo-shi/yuan-xing-mo-shi.md)
+  * [代理模式](ji-chu-yu-yan/she-ji-mo-shi/dai-li-mo-shi.md)
+  * [命令模式](ji-chu-yu-yan/she-ji-mo-shi/ming-ling-mo-shi.md)
 
 ## 🔥 网络库
 

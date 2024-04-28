@@ -1,12 +1,72 @@
 # 简单工厂
 
-### 一.图解
+### 一.go代码
 
-<figure><img src="../../.gitbook/assets/image (5).png" alt=""><figcaption><p>类图</p></figcaption></figure>
+简单工厂外部可以传入一个值，然后内部判断，以此来构造不同的对象。
 
-简单工厂接收外部字符串，内部进行字符串判断，返回和字符串对应的对象。
+{% code lineNumbers="true" fullWidth="false" %}
+```go
+package simplefactory
 
-<figure><img src="../../.gitbook/assets/image (6).png" alt=""><figcaption><p>时序图</p></figcaption></figure>
+import "fmt"
+
+// API is interface
+type API interface {
+	Say(name string) string
+}
+
+// NewAPI return Api instance by type
+func NewAPI(t int) API {
+	if t == 1 {
+		return &hiAPI{}
+	} else if t == 2 {
+		return &helloAPI{}
+	}
+	return nil
+}
+
+// hiAPI is one of API implement
+type hiAPI struct{}
+
+// Say hi to name
+func (*hiAPI) Say(name string) string {
+	return fmt.Sprintf("Hi, %s", name)
+}
+
+// helloAPI is another API implement
+type helloAPI struct{}
+
+// Say hello to name
+func (*helloAPI) Say(name string) string {
+	return fmt.Sprintf("Hello, %s", name)
+}
+```
+{% endcode %}
+
+以下是使用方式：
+
+```go
+package simplefactory
+
+import "testing"
+
+// TestType1 test get hiapi with factory
+func TestType1(t *testing.T) {
+	api := NewAPI(1)
+	s := api.Say("Tom")
+	if s != "Hi, Tom" {
+		t.Fatal("Type1 test fail")
+	}
+}
+
+func TestType2(t *testing.T) {
+	api := NewAPI(2)
+	s := api.Say("Tom")
+	if s != "Hello, Tom" {
+		t.Fatal("Type2 test fail")
+	}
+}
+```
 
 ### 二.特性
 

@@ -1,25 +1,111 @@
 # 工厂方法
 
-### 一.图解
+### 一.go代码
 
-<figure><img src="../../.gitbook/assets/image (7).png" alt=""><figcaption><p>类图</p></figcaption></figure>
+{% code lineNumbers="true" %}
+```go
+package factorymethod
 
-依赖Product和Factory的代码是稳定的，因为这是两个抽象类。每来一个新产品，就实现一个具体的产品类和工厂类，只需要将该工厂类传入具体的代码即可。
+// Operator 是被封装的实际类接口
+type Operator interface {
+	SetA(int)
+	SetB(int)
+	Result() int
+}
 
-```cpp
-int main(int argc, char *argv[]) {
-    Factory * fc = new ConcreteFactory();
-    Product * prod = fc->factoryMethod();
-    prod->use();
-    
-    delete fc;
-    delete prod;
-    
-    return 0;
+// OperatorFactory 是工厂接口
+type OperatorFactory interface {
+	Create() Operator
+}
+
+// OperatorBase 是Operator 接口实现的基类，封装公用方法
+type OperatorBase struct {
+	a, b int
+}
+
+// SetA 设置 A
+func (o *OperatorBase) SetA(a int) {
+	o.a = a
+}
+
+// SetB 设置 B
+func (o *OperatorBase) SetB(b int) {
+	o.b = b
+}
+
+// PlusOperatorFactory 是 PlusOperator 的工厂类
+type PlusOperatorFactory struct{}
+
+func (PlusOperatorFactory) Create() Operator {
+	return &PlusOperator{
+		OperatorBase: &OperatorBase{},
+	}
+}
+
+// PlusOperator Operator 的实际加法实现
+type PlusOperator struct {
+	*OperatorBase
+}
+
+// Result 获取结果
+func (o PlusOperator) Result() int {
+	return o.a + o.b
+}
+
+// MinusOperatorFactory 是 MinusOperator 的工厂类
+type MinusOperatorFactory struct{}
+
+func (MinusOperatorFactory) Create() Operator {
+	return &MinusOperator{
+		OperatorBase: &OperatorBase{},
+	}
+}
+
+// MinusOperator Operator 的实际减法实现
+type MinusOperator struct {
+	*OperatorBase
+}
+
+// Result 获取结果
+func (o MinusOperator) Result() int {
+	return o.a - o.b
 }
 ```
+{% endcode %}
 
-<figure><img src="../../.gitbook/assets/image (8).png" alt=""><figcaption><p>时序图</p></figcaption></figure>
+使用方式如下：
+
+{% code lineNumbers="true" %}
+```go
+package factorymethod
+
+import "testing"
+
+// compute是稳定的代码，依赖的是稳定的接口
+func compute(factory OperatorFactory, a, b int) int {
+	op := factory.Create()
+	op.SetA(a)
+	op.SetB(b)
+	return op.Result()
+}
+
+func TestOperator(t *testing.T) {
+	var (
+		factory OperatorFactory
+	)
+
+	factory = PlusOperatorFactory{}
+	if compute(factory, 1, 2) != 3 {
+		t.Fatal("error with factory method pattern")
+	}
+
+	factory = MinusOperatorFactory{}
+	if compute(factory, 4, 2) != 2 {
+		t.Fatal("error with factory method pattern")
+	}
+}
+```
+{% endcode %}
 
 ### 二.特性
 
