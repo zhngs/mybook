@@ -2,7 +2,7 @@
 
 ### 一.go代码
 
-<pre class="language-go" data-line-numbers><code class="lang-go">package templatemethod
+<pre class="language-go"><code class="lang-go">package templatemethod
 
 import "fmt"
 

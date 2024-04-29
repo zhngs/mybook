@@ -4,7 +4,7 @@
 
 简单工厂外部可以传入一个值，然后内部判断，以此来构造不同的对象。
 
-{% code lineNumbers="true" fullWidth="false" %}
+{% code fullWidth="false" %}
 ```go
 package simplefactory
 

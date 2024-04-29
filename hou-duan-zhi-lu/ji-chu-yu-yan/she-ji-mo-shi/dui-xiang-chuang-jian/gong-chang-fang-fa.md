@@ -2,7 +2,6 @@
 
 ### 一.go代码
 
-{% code lineNumbers="true" %}
 ```go
 package factorymethod
 
@@ -71,11 +70,9 @@ func (o MinusOperator) Result() int {
 	return o.a - o.b
 }
 ```
-{% endcode %}
 
 使用方式如下：
 
-{% code lineNumbers="true" %}
 ```go
 package factorymethod
 
@@ -105,10 +102,104 @@ func TestOperator(t *testing.T) {
 	}
 }
 ```
-{% endcode %}
 
-### 二.特性
+### 二.c++代码
+
+比较版本一和版本二，版本二虽然代码量更多，但是MainForm变成了一个稳定的结构，出现新的Splitter，只需要新建一个子类和一个工厂即可。满足开闭原则，满足依赖倒置原则。
+
+#### 1.版本一
+
+```cpp
+class ISplitter {
+public:
+    virtual void split()=0;
+    virtual ~ISplitter(){}
+};
+
+class BinarySplitter : public ISplitter {};
+class TxtSplitter: public ISplitter {};
+class PictureSplitter: public ISplitter {};
+class VideoSplitter: public ISplitter {};
+
+class MainForm {
+public:
+    void Button1_Click(){
+        ISplitter * splitter = new BinarySplitter();//依赖具体类
+        splitter->split();
+    }
+};
+```
+
+#### 2.版本2
+
+```cpp
+//抽象类
+class ISplitter{
+public:
+    virtual void split()=0;
+    virtual ~ISplitter(){}
+};
+
+//工厂基类
+class SplitterFactory{
+public:
+    virtual ISplitter* CreateSplitter()=0;
+    virtual ~SplitterFactory(){}
+};
+
+class BinarySplitter : public ISplitter {};
+class TxtSplitter: public ISplitter {};
+class PictureSplitter: public ISplitter {};
+class VideoSplitter: public ISplitter {};
+
+//具体工厂
+class BinarySplitterFactory: public SplitterFactory{
+public:
+    virtual ISplitter* CreateSplitter(){
+        return new BinarySplitter();
+    }
+};
+
+class TxtSplitterFactory: public SplitterFactory{
+public:
+    virtual ISplitter* CreateSplitter(){
+        return new TxtSplitter();
+    }
+};
+
+class PictureSplitterFactory: public SplitterFactory{
+public:
+    virtual ISplitter* CreateSplitter(){
+        return new PictureSplitter();
+    }
+};
+
+class VideoSplitterFactory: public SplitterFactory{
+public:
+    virtual ISplitter* CreateSplitter(){
+        return new VideoSplitter();
+    }
+};
+
+class MainForm {
+    SplitterFactory* factory; // 工厂
+public:
+    MainForm(SplitterFactory* factory) {
+        this->factory=factory;
+    }
+    
+    void Button1_Click() {  
+	ISplitter * splitter = factory->CreateSplitter(); //多态new
+        splitter->split();
+    }
+};
+```
+
+### 三.特性
+
+<figure><img src="../../../.gitbook/assets/image (15).png" alt=""><figcaption><p>类图</p></figcaption></figure>
 
 解决的问题：
 
 * 满足开闭原则，因为创建产品的职责由工厂子类负责，这样每来一个新产品，新建一个工厂就行。不需要修改原本代码，只需要写新代码即可。
+* 满足依赖倒置原则，高层模块依赖抽象，实现细节依赖抽象。

@@ -2,7 +2,6 @@
 
 ### 一.go代码
 
-{% code lineNumbers="true" %}
 ```go
 package abstractfactory
 
@@ -78,11 +77,9 @@ func (*XMLDAOFactory) CreateOrderDetailDAO() OrderDetailDAO {
 	return &XMLDetailDAO{}
 }
 ```
-{% endcode %}
 
 使用方式如下：
 
-{% code lineNumbers="true" %}
 ```go
 package abstractfactory
 
@@ -110,7 +107,6 @@ func ExampleXmlFactory() {
 	// xml detail save
 }
 ```
-{% endcode %}
 
 ### 二.特性
 
