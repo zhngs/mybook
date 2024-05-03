@@ -75,6 +75,92 @@ func ExampleObserver() {
 }
 ```
 
-### 二.特性
+### 二.c++代码
 
-观察者模式将数据生产者和消费者隔离开，当有多个消费者时，满足开闭原则。
+#### 1.版本一
+
+```cpp
+class FileSplitter {
+    ProgressBar* m_progressBar; // 这里依赖具体的对象
+public:
+    void split() {
+        // 分割过程中通知ProgressBar
+    }
+};
+
+class MainForm : public Form {
+    ProgressBar* progressBar;
+
+public:
+    void Button1_Click() {	
+	FileSplitter splitter(progressBar);
+	splitter.split();
+    }
+};
+```
+
+#### 2.版本二
+
+```cpp
+class IProgress{
+public:
+    virtual void DoProgress(float value)=0;
+    virtual ~IProgress(){}
+};
+
+
+class FileSplitter {
+    List<IProgress*>  m_iprogressList;
+	
+public:
+    void split(){
+	// 分割过程中调用onProgress，这里变成了稳定的代码
+    }
+
+    void addIProgress(IProgress* iprogress) {
+	m_iprogressList.push_back(iprogress);
+    }
+
+    void removeIProgress(IProgress* iprogress) {
+	m_iprogressList.remove(iprogress);
+    }
+
+protected:
+    virtual void onProgress(float value) {
+	List<IProgress*>::iterator itor=m_iprogressList.begin();
+	while (itor != m_iprogressList.end()) {
+	    (*itor)->DoProgress(value);
+	    itor++;
+	}
+    }
+};
+
+class MainForm : public Form, public IProgress {
+    ProgressBar* progressBar;
+public:
+    void Button1_Click(){
+	ConsoleNotifier cn;
+	FileSplitter splitter;
+	splitter.addIProgress(this);
+	splitter.addIProgress(&cn);
+	splitter.split();
+	splitter.removeIProgress(this);
+
+    virtual void DoProgress(float value){
+	progressBar->setValue(value);
+    }
+};
+
+class ConsoleNotifier : public IProgress {
+public:
+    virtual void DoProgress(float value) {
+	cout << ".";
+    }
+};
+```
+
+### 三.特性
+
+<figure><img src="../../../.gitbook/assets/image (8).png" alt=""><figcaption></figcaption></figure>
+
+解决问题：观察者模式将数据生产者和消费者隔离开，当有多个消费者时，满足开闭原则。

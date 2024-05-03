@@ -1,109 +1,108 @@
 # 模板方法
 
-### 一.go代码
+### 一.c++代码
 
-<pre class="language-go"><code class="lang-go">package templatemethod
+#### 1.版本一
 
-import "fmt"
-
-type Downloader interface {
-	Download(uri string)
-}
-
-type template struct {
-	implement
-	uri string
-}
-
-type implement interface {
-	download()
-	save()
-}
-
-func newTemplate(impl implement) *template {
-	return &#x26;template{
-		implement: impl,
+```cpp
+class Application {
+  public:
+	bool Step2() {
+		cout << "myStep2" << endl;
+		return true;
 	}
-}
 
-// 这里是稳定的代码
-func (t *template) Download(uri string) {
-	t.uri = uri
-	fmt.Print("prepare downloading\n")
-	t.implement.download()
-	t.implement.save()
-	fmt.Print("finish downloading\n")
-}
+	void Step4() {
+		cout << "myStep4" << endl;
+	}
+};
 
-// 不要这样写，覆盖父类方法，会违反里氏替换原则
-<strong>// func (t *template) save() {
-</strong>//	fmt.Print("default save\n")
-// }
+int main() {
+	Library lib;
+	Application app;
 
-type HTTPDownloader struct {
-	*template
-}
+	lib.Step1();
 
-func NewHTTPDownloader() Downloader {
-	downloader := &#x26;HTTPDownloader{}
-	template := newTemplate(downloader)
-	downloader.template = template
-	return downloader
-}
+	if (app.Step2()) {
+		lib.Step3();
+	}
 
-func (d *HTTPDownloader) download() {
-	fmt.Printf("download %s via http\n", d.uri)
-}
+	for (int i = 0; i < 4; i++) {
+		app.Step4();
+	}
 
-func (*HTTPDownloader) save() {
-	fmt.Printf("http save\n")
-}
-
-type FTPDownloader struct {
-	*template
-}
-
-func NewFTPDownloader() Downloader {
-	downloader := &#x26;FTPDownloader{}
-	template := newTemplate(downloader)
-	downloader.template = template
-	return downloader
-}
-
-func (d *FTPDownloader) download() {
-	fmt.Printf("download %s via ftp\n", d.uri)
-}
-
-func (*FTPDownloader) save() {
-	fmt.Printf("ftp save\n")
-}
-</code></pre>
-
-使用方式如下：
-
-```go
-package templatemethod
-
-func ExampleHTTPDownloader() {
-	var downloader Downloader = NewHTTPDownloader()
-
-	downloader.Download("http://example.com/abc.zip")
-	// Output:
-	// prepare downloading
-	// download http://example.com/abc.zip via http
-	// http save
-	// finish downloading
-}
-
-func ExampleFTPDownloader() {
-	var downloader Downloader = NewFTPDownloader()
-
-	downloader.Download("ftp://example.com/abc.zip")
-	// Output:
-	// prepare downloading
-	// download ftp://example.com/abc.zip via ftp
-	// default save
-	// finish downloading
+	lib.Step5();
 }
 ```
+
+#### 2.版本二
+
+```cpp
+class Library {
+  public:
+    // 这里是稳定的代码
+    void Run() {
+        Step1();
+        if (Step2()) {
+            Step3();
+        }
+        for (int i = 0; i < 4; i++) {
+            Step4();
+        }
+        Step5();
+    }
+    virtual ~Library() {}
+
+  protected:
+    void Step1() {
+        cout << "Step1" << endl;
+    }
+    void Step3() {
+        cout << "Step3" << endl;
+    }
+    void Step5() {
+        cout << "Step5" << endl;
+    }
+
+    virtual bool Step2() = 0; // 等待被实现
+    virtual void Step4() = 0; // 等待被实现
+};
+
+//应用程序开发人员
+class Application : public Library {
+  protected:
+    virtual bool Step2() {
+        //... 子类重写实现
+    	cout << "override Step2" << endl;
+    	return true;
+    }
+
+    virtual void Step4() {
+	//... 子类重写实现
+	cout << "override Step4" << endl;
+    }
+};
+
+int main() {
+    Library *pLib = new Application();
+    pLib->Run();
+    delete pLib;
+}
+```
+
+### 二.特性
+
+<figure><img src="../../../.gitbook/assets/image (5).png" alt=""><figcaption></figcaption></figure>
+
+解决问题：将某些具体逻辑延迟放在子类中实现。
+
+模板方法是最简单的多态实现，满足开闭原则，满足依赖倒置原则。
+
+go没办法直观地实现模板方法，可以将run和step分成两个接口来实现。
+
+go有几点需要注意，从初始化和方法调用角度来看：
+
+* 匿名字段是struct，且不是指针，可以看作泛化关系，也可以看作组合+泛化关系。
+* 匿名字段是struct，且是指针，可以看作聚合+泛化关系。
+* 匿名字段是interface，一般接口中的类型是指针，可以看作聚合+实现关系。
 

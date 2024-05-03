@@ -108,9 +108,147 @@ func ExampleXmlFactory() {
 }
 ```
 
-### 二.特性
+### 二.c++代码
 
-解决问题：对工厂方法进行拓展，支持多类产品。
+#### 1.版本一
+
+```cpp
+class EmployeeDAO { 
+public:
+    vector<EmployeeDO> GetEmployees(){
+        SqlConnection* connection = new SqlConnection();
+        connection->ConnectionString = "...";
+        
+        SqlCommand* command = new SqlCommand();
+        command->CommandText="...";
+        command->SetConnection(connection);
+
+        SqlDataReader* reader = command->ExecuteReader();
+        while (reader->Read()){
+            // ...
+        }
+    }
+};
+```
+
+#### 2.版本二
+
+```cpp
+//数据库访问有关的基类
+class IDBConnection {};
+class IDBConnectionFactory{
+public:
+    virtual IDBConnection* CreateDBConnection()=0;
+};
+
+class IDBCommand {};
+class IDBCommandFactory{
+public:
+    virtual IDBCommand* CreateDBCommand()=0;
+};
+
+class IDataReader {};
+class IDataReaderFactory{
+public:
+    virtual IDataReader* CreateDataReader()=0;
+};
+
+//支持SQL Server
+class SqlConnection: public IDBConnection {};
+class SqlConnectionFactory:public IDBConnectionFactory {};
+
+class SqlCommand: public IDBCommand {};
+class SqlCommandFactory:public IDBCommandFactory {};
+
+class SqlDataReader: public IDataReader {};
+class SqlDataReaderFactory:public IDataReaderFactory {};
+
+//支持Oracle
+class OracleConnection: public IDBConnection {};
+class OracleCommand: public IDBCommand {};
+class OracleDataReader: public IDataReader{};
+
+class EmployeeDAO{
+    IDBConnectionFactory* dbConnectionFactory;
+    IDBCommandFactory* dbCommandFactory;
+    IDataReaderFactory* dataReaderFactory;
+    
+public:
+    // 这里使用了三个factory，虽然这里的代码是稳定的，但是这三个factory实际上是有关联的
+    vector<EmployeeDO> GetEmployees() {
+        IDBConnection* connection = dbConnectionFactory->CreateDBConnection();
+        connection->ConnectionString("...");
+
+        IDBCommand* command = dbCommandFactory->CreateDBCommand();
+        command->CommandText("...");
+        command->SetConnection(connection); //关联性
+
+        IDBDataReader* reader = command->ExecuteReader(); //关联性
+        while (reader->Read()){
+            // ...
+        }
+
+    }
+};
+```
+
+#### 3.版本三
+
+```cpp
+//数据库访问有关的基类
+class IDBConnection {};
+class IDBCommand {};
+class IDataReader {};
+// 这里将三个不同的抽象基类放在同一个factory中，这三个抽象基类必须是相互关联的
+class IDBFactory{
+public:
+    virtual IDBConnection* CreateDBConnection()=0;
+    virtual IDBCommand* CreateDBCommand()=0;
+    virtual IDataReader* CreateDataReader()=0;
+};
+
+//支持SQL Server
+class SqlConnection: public IDBConnection {};
+class SqlCommand: public IDBCommand {};
+class SqlDataReader: public IDataReader {};
+class SqlDBFactory:public IDBFactory{
+public:
+    virtual IDBConnection* CreateDBConnection()=0;
+    virtual IDBCommand* CreateDBCommand()=0;
+    virtual IDataReader* CreateDataReader()=0;
+ 
+};
+
+//支持Oracle
+class OracleConnection: public IDBConnection {};
+class OracleCommand: public IDBCommand {};
+class OracleDataReader: public IDataReader {};
+
+class EmployeeDAO{
+    IDBFactory* dbFactory;
+public:
+    vector<EmployeeDO> GetEmployees(){
+        IDBConnection* connection = dbFactory->CreateDBConnection();
+        connection->ConnectionString("...");
+
+        IDBCommand* command = dbFactory->CreateDBCommand();
+        command->CommandText("...");
+        command->SetConnection(connection); //关联性
+
+        IDBDataReader* reader = command->ExecuteReader(); //关联性
+        while (reader->Read()){
+            // ...
+        }
+
+    }
+};
+```
+
+### 三.特性
+
+<figure><img src="../../../.gitbook/assets/image (3).png" alt=""><figcaption></figcaption></figure>
+
+解决问题：是对工厂方法进行拓展，支持多类产品。
 
 缺点：
 

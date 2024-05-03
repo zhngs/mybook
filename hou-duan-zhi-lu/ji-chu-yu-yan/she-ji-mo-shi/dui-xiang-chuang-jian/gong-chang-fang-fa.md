@@ -197,7 +197,7 @@ public:
 
 ### 三.特性
 
-<figure><img src="../../../.gitbook/assets/image (15).png" alt=""><figcaption><p>类图</p></figcaption></figure>
+<figure><img src="../../../.gitbook/assets/image (2).png" alt=""><figcaption></figcaption></figure>
 
 解决的问题：
 
