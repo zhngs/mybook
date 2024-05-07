@@ -110,17 +110,18 @@
 
 *   考虑这样一种情况，我们需要同时等待多个通道，我们不能只从一个通道上接收，因为会阻塞其他通道。这时候需要一种通道`多路复用`的操作，这就是select
 
-    <pre class="language-go"><code class="lang-go">select {
-        case &#x3C;-ch1:
-    <strong>        //...
-    </strong>    case x := &#x3C;-ch2:
+    ```go
+    select {
+        case <-ch1:
             //...
-        case ch3 &#x3C;- y:
+        case x := <-ch2:
+            //...
+        case ch3 <- y:
             //...
         default:
             //...
     }
-    </code></pre>
+    ```
 * select语句有一系列分支和一个可选的默认分支，每个分支指定一次通信。select语句会一直阻塞，只能其中一个分支满足条件，然后select语句退出
 * select里面如果没有分支，即select{}会有永久阻塞的效果
 * select可以实现管道的非阻塞发送

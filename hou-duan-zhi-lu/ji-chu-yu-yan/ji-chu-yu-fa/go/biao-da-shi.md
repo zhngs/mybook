@@ -72,18 +72,19 @@
 
 *   go只有for一个循环语句，但对其做了功能拓展
 
-    <pre class="language-go"><code class="lang-go">for i := 1; i &#x3C; 3; i++ {
+    ```go
+    for i := 1; i < 3; i++ {
         //...
     }
     ​
-    for i &#x3C; 3 {
-        //类似while(i &#x3C; 3)
-    <strong>}
-    </strong>​
+    for i < 3 {
+        //类似while(i < 3)
+    }
+    ​
     for {
         //类似while(true)
     }
-    </code></pre>
+    ```
 *   for可以搭配range对数据进行迭代，对于字符串，数组，切片类型，返回下标和值；对于字典，返回键和值；对于通道，只返回一个值，即通道收到的值
 
     ```go
