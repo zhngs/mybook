@@ -66,4 +66,4 @@ span包含如下信息([https://opentelemetry.io/docs/concepts/signals/traces/](
 
 一次trace是由多个span组成，最后可以得到类似如下的瀑布图，可以比较清楚地看到父子关系和时序关系：
 
-<figure><img src="../../.gitbook/assets/image (4) (1) (1).png" alt=""><figcaption><p>瀑布图</p></figcaption></figure>
+<figure><img src="../../.gitbook/assets/image (4) (1) (1) (1).png" alt=""><figcaption><p>瀑布图</p></figcaption></figure>

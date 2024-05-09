@@ -31,7 +31,7 @@
 
 * 接口的内存布局如图所示，要对接口进行赋值，首先某个类型T要实现该接口
 
-<figure><img src="../../../.gitbook/assets/image.png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../../../.gitbook/assets/image (25).png" alt=""><figcaption></figcaption></figure>
 
 * 赋值给接口后，接口会将存储该变量的地址，通过该地址才可以调用类型T的方法
 * 然后接口会保存赋值的类型，是T形式的还是\*T形式的，这两种形式有不同的方法集
