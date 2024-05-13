@@ -161,6 +161,6 @@ public:
 
 ### 三.特性
 
-<figure><img src="../../../.gitbook/assets/image (8) (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../../../.gitbook/assets/image (8) (1) (1).png" alt=""><figcaption></figcaption></figure>
 
 解决问题：观察者模式将数据生产者和消费者隔离开，当有多个消费者时，满足开闭原则。

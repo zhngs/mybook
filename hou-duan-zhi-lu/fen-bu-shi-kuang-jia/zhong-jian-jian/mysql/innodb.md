@@ -22,7 +22,7 @@ InnoDB引擎与MyISAM引擎的区别：
 
 ### 三.架构图
 
-<figure><img src="../../../.gitbook/assets/image (14) (1).png" alt=""><figcaption><p>InnoDB架构图</p></figcaption></figure>
+<figure><img src="../../../.gitbook/assets/image (14) (1) (1).png" alt=""><figcaption><p>InnoDB架构图</p></figcaption></figure>
 
 架构主要分为如下部分：
 

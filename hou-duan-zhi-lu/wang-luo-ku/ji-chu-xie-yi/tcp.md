@@ -57,11 +57,11 @@
 
 使用滑动窗口协议来解决，比如发送方`窗口(window)`是指被发送方注入到网络中，但是还没被确认的分组集合，窗口的分组数量就是`窗口大小(window size)`&#x20;
 
-<figure><img src="../../.gitbook/assets/image.png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../../.gitbook/assets/image (27).png" alt=""><figcaption></figcaption></figure>
 
 接收窗口如下
 
-<figure><img src="../../.gitbook/assets/image (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../../.gitbook/assets/image (1) (1).png" alt=""><figcaption></figcaption></figure>
 
 ### 2.问题3
 
@@ -84,7 +84,7 @@
 
 ### 1.协议字段
 
-<figure><img src="../../.gitbook/assets/image (2).png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../../.gitbook/assets/image (2) (1).png" alt=""><figcaption></figcaption></figure>
 
 | 字段   | 大小    | 描述                                                                               |
 | ---- | ----- | -------------------------------------------------------------------------------- |
@@ -97,29 +97,29 @@
 
 **tcp选项如下**
 
-<figure><img src="../../.gitbook/assets/image (3).png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../../.gitbook/assets/image (3) (1).png" alt=""><figcaption></figcaption></figure>
 
 ### 2.TSOPT
 
 时间戳选项默认启用
 
-<figure><img src="../../.gitbook/assets/image (5).png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../../.gitbook/assets/image (5) (1).png" alt=""><figcaption></figcaption></figure>
 
 推荐layout(TCP头部必须是4字节的倍数)&#x20;
 
-<figure><img src="../../.gitbook/assets/image (6).png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../../.gitbook/assets/image (6) (1).png" alt=""><figcaption></figcaption></figure>
 
 ### 3.SACK
 
 sack选项指定n个块需要8n+2个字节，和TSOPT配合时，40字节的TCP选项可以有一个TSOPT和包含3个块的SACK，说明`一个RTT的时间内sack可以填补3个空缺`&#x20;
 
-<figure><img src="../../.gitbook/assets/image (7).png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../../.gitbook/assets/image (7) (1).png" alt=""><figcaption></figcaption></figure>
 
 ### 4.SACK-Permitted
 
 表明发送端支持sack，这个选项不能出现在非SYN报文中
 
-<figure><img src="../../.gitbook/assets/image (8).png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../../.gitbook/assets/image (8) (1).png" alt=""><figcaption></figcaption></figure>
 
 ### 5.窗口缩放
 
@@ -138,7 +138,7 @@ sack选项指定n个块需要8n+2个字节，和TSOPT配合时，40字节的TCP�
 
 #### **1.1 设置RTO的标准方法**
 
-<figure><img src="../../.gitbook/assets/image (9).png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../../.gitbook/assets/image (9) (1).png" alt=""><figcaption></figcaption></figure>
 
 * M为RTT测量值，srtt为M的指数加权移动平均，即Exponentially Weighted Moving Average(EWMA)，g取1/8
 * rttvar为偏差估计值，同样是EWMA，h取1/4
@@ -148,7 +148,7 @@ sack选项指定n个块需要8n+2个字节，和TSOPT配合时，40字节的TCP�
 
 RFC6298中提出一个新的公式
 
-<figure><img src="../../.gitbook/assets/image (10).png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../../.gitbook/assets/image (10) (1).png" alt=""><figcaption></figcaption></figure>
 
 * G为操作系统计时器粒度，RTO至少为1s
 * 根据RFC6298，`RTO初始值为1s，初始SYN报文段采用的超时时间为3s，当接收到首个RTT测量结果M，srtt设置为M，rttvar设置为M/2`
@@ -177,11 +177,11 @@ RFC6298中提出一个新的公式
 
 #### **3.1 伪超时**
 
-<figure><img src="../../.gitbook/assets/image (12).png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../../.gitbook/assets/image (12) (1).png" alt=""><figcaption></figcaption></figure>
 
 #### **3.2 包失序**
 
-<figure><img src="../../.gitbook/assets/image (13).png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../../.gitbook/assets/image (13) (1).png" alt=""><figcaption></figcaption></figure>
 
 * 当失序发生在反向(ack)链路，会使发送方窗口快速前移，造成流量突发，发送方对于不必要的ack丢弃
 * 当失序发生在正向链路，接收方会无法识别失序和丢包，因为失序和丢包都会造成收到无序的包，当严重失序时，会触发快速重传，如上图所示
@@ -214,7 +214,7 @@ RFC6298中提出一个新的公式
 
 反映网络传输能力的变量称为`拥塞窗口(congestion window)`，即cwnd。发送端实际可用的窗口W是接收方通知窗口awnd和拥塞窗口cwnd的最小值
 
-<figure><img src="../../.gitbook/assets/image (16).png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../../.gitbook/assets/image (16) (1).png" alt=""><figcaption></figcaption></figure>
 
 在tcp发送方的数据中，没有收到ack数据量不能超过W，这种已经发出但是没有确认的数据量大小称为`在外数据值(flight size)` W的值理论上最好的情况是等于`带宽延时积(BDP)`，过小会影响效率，过大会引入不必要的延时
 
@@ -222,31 +222,31 @@ RFC6298中提出一个新的公式
 
 稳定状态下的tcp拥塞控制，实际是使网络传输路径下的`数据包守恒`，这是`数据包守恒原理` 发送方的拥塞控制是由ack来驱动的，由ack触发新的数据传输，叫做`自同步(self clocking)`，类似于负反馈，这叫做`ack时钟原理` 基于上述原理的拥塞算法叫做`慢启动和拥塞避免`
 
-<figure><img src="../../.gitbook/assets/image (18).png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../../.gitbook/assets/image (18) (1).png" alt=""><figcaption></figcaption></figure>
 
 ### 3.慢启动
 
-<figure><img src="../../.gitbook/assets/image (19).png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../../.gitbook/assets/image (19) (1).png" alt=""><figcaption></figcaption></figure>
 
 RFC5681对慢启动描述如下，慢启动的触发条件有两个：`传输开始`和`重传计时器超时`&#x20;
 
-<figure><img src="../../.gitbook/assets/image (20).png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../../.gitbook/assets/image (20) (1).png" alt=""><figcaption></figcaption></figure>
 
 慢启动是有阈值(ssthresh)的，该阈值是`tcp最优窗口估计值的下界`，ssthresh是会动态变化的，当出现重传情况时，无论是超时重传还是快速重传，ssthresh都会按照下面公式改变，该公式可能会使ssthresh增大，也可能使ssthresh减小
 
-<figure><img src="../../.gitbook/assets/image (21).png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../../.gitbook/assets/image (21) (1).png" alt=""><figcaption></figcaption></figure>
 
 ### 4.拥塞避免
 
 拥塞避免是在慢启动之后的阶段，当慢启动快速增长到`慢启动阈值`，就会进入拥塞避免阶段，cwnd从指数增长变为线性增长 之所以设置一个阈值，是因为当慢启动如果不加限制增长，会占用全部的路由器资源，从而导致共享路由器的其他连接出现严重的丢包和重传，进而导致整个网络不稳定
 
-<figure><img src="../../.gitbook/assets/image (22).png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../../.gitbook/assets/image (22) (1).png" alt=""><figcaption></figcaption></figure>
 
 ### 5.经典的快速重传和快速恢复
 
 参考TCP/IP对标准TCP的定义：
 
-<figure><img src="../../.gitbook/assets/image (23).png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../../.gitbook/assets/image (23) (1).png" alt=""><figcaption></figcaption></figure>
 
 ### 6.TCP NewReno
 
@@ -284,4 +284,4 @@ cat /proc/sys/net/ipv4/tcp_allowed_congestion_control
 
 ### 九.连接管理
 
-<figure><img src="../../.gitbook/assets/image (24).png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../../.gitbook/assets/image (24) (1).png" alt=""><figcaption></figcaption></figure>

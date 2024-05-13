@@ -246,7 +246,7 @@ public:
 
 ### 三.特性
 
-<figure><img src="../../../.gitbook/assets/image (3) (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../../../.gitbook/assets/image (3) (1) (1).png" alt=""><figcaption></figcaption></figure>
 
 解决问题：是对工厂方法进行拓展，支持多类产品。
 

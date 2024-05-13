@@ -92,7 +92,7 @@ int main() {
 
 ### 二.特性
 
-<figure><img src="../../../.gitbook/assets/image (5) (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../../../.gitbook/assets/image (5) (1) (1).png" alt=""><figcaption></figcaption></figure>
 
 解决问题：将某些具体逻辑延迟放在子类中实现。
 

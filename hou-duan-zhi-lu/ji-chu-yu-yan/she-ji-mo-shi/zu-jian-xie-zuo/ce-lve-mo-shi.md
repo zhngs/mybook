@@ -135,7 +135,7 @@ public:
 
 ### 三.特性
 
-<figure><img src="../../../.gitbook/assets/image (7) (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../../../.gitbook/assets/image (7) (1) (1).png" alt=""><figcaption></figcaption></figure>
 
 解决问题：动态使用各种策略，满足开闭原则。
 
