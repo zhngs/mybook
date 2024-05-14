@@ -95,3 +95,4 @@
   * [错误码](fen-bu-shi-kuang-jia/trpcgo-kuang-jia/cuo-wu-ma.md)
   * [配置](fen-bu-shi-kuang-jia/trpcgo-kuang-jia/pei-zhi.md)
   * [Admin](fen-bu-shi-kuang-jia/trpcgo-kuang-jia/admin.md)
+  * [名字服务](fen-bu-shi-kuang-jia/trpcgo-kuang-jia/ming-zi-fu-wu.md)
