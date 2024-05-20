@@ -60,6 +60,7 @@ message HelloReply {
 
 * 定义GreeterService接口，由外部实现。
 * 定义GreeterServer\_ServiceDesc，这是pb文件信息的核心，抽出了service和method信息。
+* 定义RegisterGreeterService工具函数，该函数将server.Service、GreeterService、GreeterServer\_ServiceDesc三者组合起来。server.Service是个接口，可以用trpc.NewServer赋值。这里整体的语义是在server.Service中，GreeterServer\_ServiceDesc这个由pb生成的标识，对应着GreeterService处理接口。
 
 ```go
 type GreeterService interface {
@@ -106,7 +107,10 @@ func RegisterGreeterService(s server.Service, svr GreeterService) {
 
 ### 3.客户端依赖
 
-以下是客户端依赖的代码：
+以下是客户端依赖的代码，核心点有两个：
+
+* 定义GreeterClientProxy接口。
+* 定义GreeterClientProxyImpl结构，实现GreeterClientProxy接口，外部直接使用。
 
 ```go
 type GreeterClientProxy interface {
@@ -140,5 +144,57 @@ func (c *GreeterClientProxyImpl) Hello(ctx context.Context, req *HelloRequest, o
 		return nil, err
 	}
 	return rsp, nil
+}
+```
+
+## 三.消息
+
+trpc-go中，将客户端和服务端的消息抽象出一个Msg接口，并提供了一个消息实现。
+
+Msg伴随了整个rpc的生命周期，可以看到其中携带很多rpc信息。
+
+```go
+type msg struct {
+	context             context.Context
+	frameHead           interface{}
+	requestTimeout      time.Duration
+	serializationType   int
+	compressType        int
+	streamID            uint32
+	dyeing              bool
+	dyeingKey           string
+	serverRPCName       string
+	clientRPCName       string
+	serverMetaData      MetaData
+	clientMetaData      MetaData
+	callerServiceName   string
+	calleeServiceName   string
+	calleeContainerName string
+	serverRspErr        error
+	clientRspErr        error
+	serverReqHead       interface{}
+	serverRspHead       interface{}
+	clientReqHead       interface{}
+	clientRspHead       interface{}
+	localAddr           net.Addr
+	remoteAddr          net.Addr
+	logger              interface{}
+	callerApp           string
+	callerServer        string
+	callerService       string
+	callerMethod        string
+	calleeApp           string
+	calleeServer        string
+	calleeService       string
+	calleeMethod        string
+	namespace           string
+	setName             string
+	envName             string
+	envTransfer         string
+	requestID           uint32
+	calleeSetName       string
+	streamFrame         interface{}
+	commonMeta          CommonMeta
+	callType            RequestType
 }
 ```
