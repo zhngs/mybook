@@ -198,3 +198,25 @@ type msg struct {
 	callType            RequestType
 }
 ```
+
+生成消息的WithCloneMessage函数如下：
+
+```go
+// WithCloneMessage copy a new message and put into context, each rpc call should
+// create a new message, this method will be called by client stub.
+func WithCloneMessage(ctx context.Context) (context.Context, Msg) {
+	newMsg := msgPool.Get().(*msg)
+	val := ctx.Value(ContextKeyMessage)
+	m, ok := val.(*msg)
+	if !ok {
+		ctx = context.WithValue(ctx, ContextKeyMessage, newMsg)
+		newMsg.context = ctx
+		return ctx, newMsg
+	}
+	ctx = context.WithValue(ctx, ContextKeyMessage, newMsg)
+	newMsg.context = ctx
+	copyCommonMessage(m, newMsg)
+	copyServerToClientMessage(m, newMsg)
+	return ctx, newMsg
+}
+```
