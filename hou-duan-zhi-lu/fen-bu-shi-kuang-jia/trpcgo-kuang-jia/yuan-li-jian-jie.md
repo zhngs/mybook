@@ -1,4 +1,4 @@
-# 快速开始
+# 原理简介
 
 ## 一.运行demo
 
@@ -370,3 +370,129 @@ func callFunc(ctx context.Context, reqBody interface{}, rspBody interface{}) (er
 * 序列化 --> 压缩 --> 编码
 * 进入Transport的RoundTrip的逻辑，也就是真正发请求的地方
 * 解码 --> 解压缩 --> 反序列化
+
+## 五.Transport
+
+Transport分ClientTransport和ServerTransport，都支持udp和tcp。
+
+```go
+// ServerTransport defines the server transport layer interface.
+type ServerTransport interface {
+	ListenAndServe(ctx context.Context, opts ...ListenServeOption) error
+}
+
+// ClientTransport defines the client transport layer interface.
+type ClientTransport interface {
+	RoundTrip(ctx context.Context, req []byte, opts ...RoundTripOption) (rsp []byte, err error)
+}
+```
+
+## 六.服务端结构
+
+在trpc-go中，服务端最顶层的结构是server，一个server可以包含多个service。
+
+```go
+type service struct {
+	activeCount    int64              // active requests count for graceful close if set MaxCloseWaitTime
+	ctx            context.Context    // context of this service
+	cancel         context.CancelFunc // function that cancels this service
+	opts           *Options           // options of this service
+	handlers       map[string]Handler // rpcname => handler
+	streamHandlers map[string]StreamHandler
+	streamInfo     map[string]*StreamServerInfo
+	stopListening  chan<- struct{}
+}
+```
+
+在service的结构中，handlers中存储rpc名字对应的处理函数，opts存储着和service绑定的组件。
+
+```go
+type Options struct {
+	container string // container name
+
+	Namespace   string // namespace like "Production", "Development" etc.
+	EnvName     string // environment name
+	SetName     string // "Set" name
+	ServiceName string // service name
+
+	Address                  string        // listen address, ip:port
+	Timeout                  time.Duration // timeout for handling a request
+	DisableRequestTimeout    bool          // whether to disable request timeout that inherits from upstream
+	DisableKeepAlives        bool          // disables keep-alives
+	CurrentSerializationType int
+	CurrentCompressType      int
+
+	protocol   string // protocol like "trpc", "http" etc.
+	network    string // network like "tcp", "udp" etc.
+	handlerSet bool   // whether that custom handler is set
+
+	ServeOptions []transport.ListenServeOption
+	Transport    transport.ServerTransport
+
+	Registry registry.Registry
+	Codec    codec.Codec
+
+	Filters          filter.ServerChain              // filter chain
+	FilterNames      []string                        // the name of filters
+	StreamHandle     StreamHandle                    // server stream processing
+	StreamTransport  transport.ServerStreamTransport // server stream transport plugin
+	MaxWindowSize    uint32                          // max window size for server stream
+	CloseWaitTime    time.Duration                   // min waiting time when closing server for wait deregister finish
+	MaxCloseWaitTime time.Duration                   // max waiting time when closing server for wait requests finish
+
+	RESTOptions   []restful.Option // RESTful router options
+	StreamFilters StreamFilterChain
+}
+```
+
+不难发现，一个service对应唯一的序列化类型、压缩类型、Codec、protocol、network、Transport。
+
+## 七.Service
+
+service实现了Handle函数，会将该函数作为transport插件的回调函数，串联起整个服务端处理流程。
+
+```go
+func (s *service) Handle(ctx context.Context, reqBuf []byte) (rspBuf []byte, err error) {
+	if s.opts.MaxCloseWaitTime > s.opts.CloseWaitTime || s.opts.MaxCloseWaitTime > MaxCloseWaitTime {
+		atomic.AddInt64(&s.activeCount, 1)
+		defer atomic.AddInt64(&s.activeCount, -1)
+	}
+
+	// if server codec is empty, simply returns error.
+	if s.opts.Codec == nil {
+		log.ErrorContextf(ctx, "server codec empty")
+		report.ServerCodecEmpty.Incr()
+		return nil, errors.New("server codec empty")
+	}
+
+	msg := codec.Message(ctx)
+	span := rpcz.SpanFromContext(ctx)
+	span.SetAttribute(rpcz.TRPCAttributeFilterNames, s.opts.FilterNames)
+
+	_, end := span.NewChild("DecodeProtocolHead")
+	reqBodyBuf, err := s.decode(ctx, msg, reqBuf)
+	end.End()
+
+	if err != nil {
+		return s.encode(ctx, msg, nil, err)
+	}
+	// ServerRspErr is already set,
+	// since RequestID is acquired, just respond to client.
+	if err := msg.ServerRspErr(); err != nil {
+		return s.encode(ctx, msg, nil, err)
+	}
+
+	rspbody, err := s.handle(ctx, msg, reqBodyBuf)
+	if err != nil {
+		// no response
+		if err == errs.ErrServerNoResponse {
+			return nil, err
+		}
+		// failed to handle, should respond to client with error code,
+		// ignore rspBody.
+		report.ServiceHandleFail.Incr()
+		return s.encode(ctx, msg, nil, err)
+	}
+	return s.handleResponse(ctx, msg, rspbody)
+}
+```
