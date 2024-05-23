@@ -69,4 +69,15 @@ type valueCtx struct {
 
 cancelCtx中有一个children字段，用来存储这个节点下面所有的cancelCtx。
 
-父cancelCtx中存储子cancelCtx的原因是，子cancelCtx将自己注册到父cancelCtx中，这也意味着子cancelCtx和父cancelCtx不一定是相邻的节点，也有可能被valueCtx隔开。
+父cancelCtx中存储子cancelCtx的原因是，子cancelCtx会向上找第一个cancelCtx当作父节点，将自己注册到父cancelCtx中，这也意味着子cancelCtx和父cancelCtx不一定是相邻的节点，也有可能被valueCtx隔开。
+
+### 五.timerCtx
+
+timerCtx内嵌了cancelCtx，具有一切cancelCtx的特性，和cancelCtx主要有如下不同：
+
+* timerCtx的deadline值一定比父timerCtx小，也就是说，父timerCtx结束子timerCtx一定结束，子timerCtx结束父timerCtx不一定结束。context中会比较timerCtx的父timerCtx的deadline，如果不满足上面的条件，timerCtx会退化成cancelCtx。
+* timerCtx停止的时候，会额外停止timer。
+
+### 六.Background
+
+Background是一个全局的ctx，如果很多的请求同时都在使用Background，那么从树的第二层开始，就是一个个不同的请求ctx，相互之间其实是看不到的。
