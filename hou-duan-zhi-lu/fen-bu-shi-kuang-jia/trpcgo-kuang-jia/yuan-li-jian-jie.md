@@ -404,7 +404,7 @@ type service struct {
 }
 ```
 
-在service的结构中，handlers中存储rpc名字对应的处理函数，opts存储着和service绑定的组件。
+在service的结构中，handlers中存储rpc名字对应的处理函数（本质是trpc.go中处理函数+用户自定义的method处理逻辑+filter），opts存储着和service绑定的组件。
 
 ```go
 type Options struct {
@@ -496,3 +496,33 @@ func (s *service) Handle(ctx context.Context, reqBuf []byte) (rspBuf []byte, err
 	return s.handleResponse(ctx, msg, rspbody)
 }
 ```
+
+Handle函数中用到了trpc.go文件中的函数，这个函数的流程如下：
+
+* 解码-->解压缩-->反序列化-->过filter-->业务逻辑-->过filter-->序列化-->压缩-->序列化
+
+上面的几步中，（解压缩-->反序列化-->过filter-->业务逻辑-->过filter）的流程是在生成的trpc.go文件中的handler函数执行的，下面回过头来看这个函数
+
+```go
+func GreeterService_Hello_Handler(svr interface{}, ctx context.Context, f server.FilterFunc) (interface{}, error) {
+	req := &HelloRequest{}
+	filters, err := f(req) // 这里的f会解压缩并且反序列化到req中
+	if err != nil {
+		return nil, err
+	}
+	// 这里是业务自定义逻辑
+	handleFunc := func(ctx context.Context, reqbody interface{}) (interface{}, error) {
+		return svr.(GreeterService).Hello(ctx, reqbody.(*HelloRequest))
+	}
+
+	var rsp interface{}
+	rsp, err = filters.Filter(ctx, req, handleFunc) // 这里经过filter获得响应
+	if err != nil {
+		return nil, err
+	}
+	return rsp, nil
+}
+```
+
+
+
